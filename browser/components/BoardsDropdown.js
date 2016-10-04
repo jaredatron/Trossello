@@ -1,3 +1,4 @@
+import $ from 'jquery'
 import './BoardsDropdown.sass'
 import React, { Component } from 'react'
 
@@ -32,7 +33,7 @@ class BoardsDropdown extends Component {
 
 const Dropdown = (props) => {
   const boards = props.boards.map(board => {
-    return <div>{board.name}</div>
+    return <div key={board.id}>{board.name}</div>
   })
   return <div className="BoardsDropdown-dropdown">
     {boards}
