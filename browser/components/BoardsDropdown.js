@@ -31,24 +31,33 @@ class BoardsDropdown extends Component {
 
 
 const Dropdown = (props) => {
-  const boards = props.boards.map(board =>
-    <div>{board.name}</div>
-  )
+  const boards = props.boards.map(board => {
+    return <div>{board.name}</div>
+  })
   return <div className="BoardsDropdown-dropdown">
-    the drop down
+    {boards}
   </div>
 }
 
 class BoardsProvider extends Component {
+
+  constructor(props){
+    super(props)
+    this.state = {
+      boards: [
+        {id: 1, name: 'foo'},
+        {id: 2, name: 'bar'},
+        {id: 3, name: 'baz'},
+      ]
+    }
+  }
+
   render(){
     const props = Object.assign({}, this.props)
-    props.boards = [
-      {id: 1, name: 'foo'},
-      {id: 2, name: 'bar'},
-      {id: 3, name: 'baz'},
-    ]
+    props.boards = this.state.boards
     return <BoardsDropdown {...props} />
   }
+
 }
 
 export default BoardsProvider
