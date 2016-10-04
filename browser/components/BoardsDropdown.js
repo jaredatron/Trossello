@@ -1,7 +1,7 @@
 import './BoardsDropdown.sass'
 import React, { Component } from 'react'
 
-export default class BoardsDropdown extends Component {
+class BoardsDropdown extends Component {
 
   constructor(props){
     super(props)
@@ -34,5 +34,11 @@ const Dropdown = (props) => {
   </div>
 }
 
+class BoardsProvider extends Component {
+  render(){
+    const props = Object.assign({}, this.props)
+    return <BoardsDropdown {...props} />
+  }
+}
 
-
+export default BoardsProvider
