@@ -53,6 +53,13 @@ class BoardsProvider extends Component {
     }
   }
 
+  componentWillMount(){
+    $.getJSON('/api/boards')
+      .then(boards => {
+        this.setState({boards})
+      })
+  }
+
   render(){
     const props = Object.assign({}, this.props)
     props.boards = this.state.boards
