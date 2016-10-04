@@ -10,6 +10,7 @@ actions.loadSession()
 window.DEBUG = {}
 window.DEBUG.store = store
 window.DEBUG.actions = actions
+window.DEBUG.request = require('request')
 
 export default () => {
   return <Provider store={store}>

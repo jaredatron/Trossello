@@ -21,7 +21,7 @@ server.use(cookieSession({
   keys: [process.env.SESSION_KEY]
 }))
 server.use(express.static(buildPath+'/public'))
-server.use(bodyParser.json())
+server.use(bodyParser.json({ type: 'application/json' }))
 
 server.use('/',    authRoutes);
 server.use('/api', apiRoutes)

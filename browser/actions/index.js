@@ -4,10 +4,14 @@ import types from './types'
 // import actions
 import loadSession from './loadSession'
 import logout from './logout'
+import createBoard from './createBoard'
+import loadBoard from './loadBoard'
 
 const actions = {
   loadSession,
   logout,
+  createBoard,
+  loadBoard,
 }
 
 // dispatch with event type checking

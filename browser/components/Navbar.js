@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 import './Navbar.sass'
 import PresentationalComponent from './PresentationalComponent'
 import Link from './Link'
 import Icon from './Icon'
 import LogoutButton from './LogoutButton'
 import LoginButton from './LoginButton'
+import CreateBoardButton from './CreateBoardButton'
 
 const Navbar = (props) => {
   const { auth } = props.state
@@ -33,9 +34,7 @@ const LoggedInNavbar = ({auth}) => {
     <div className="Navbar-BoardIndexButton">
       <a href="/">Trossello</a>
     </div>
-    <button className="Navbar-button CreateBoardButton">
-      <Icon type="plus" />
-    </button>
+    <CreateBoardButton className="Navbar-button" />
     <button className="Navbar-button Navbar-AvatarButton">
       <img src={auth.user.avatar_url} />
       <span>{auth.user.name}</span>
@@ -48,3 +47,4 @@ const LoggedInNavbar = ({auth}) => {
 }
 
 export default PresentationalComponent(Navbar)
+

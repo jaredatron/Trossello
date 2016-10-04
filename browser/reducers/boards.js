@@ -1,55 +1,76 @@
-const FakeBoards = [
-  {
-    id: 1,
-    name: 'Peters Life',
-    background_color: 'rgb(0, 121, 191)',
-    lists: [
-      {
-        id: 2321321,
-        name: 'Home Shopping',
-        cards: [
-          { id: 111, description: "buy some cheese" },
-          { id: 112, description: "buy some milk" },
-          { id: 113, description: "buy some salad" },
-          { id: 114, description: "buy some carrots" },
-        ]
-      },
-      {
-        id: 3444,
-        name: 'Work Stuffs',
-        cards: [
-          { id: 221, description: "TPS reports" },
-          { id: 222, description: "clean our junk drawer" },
-          { id: 223, description: "read 1,000 lines of code" },
-          { id: 224, description: "learn everything about react" },
-          { id: 225, description: "buy Jared a donut" },
-          { id: 226, description: "steal Stan's stapler" },
-          { id: 227, description: "take a nap" },
-        ]
-      },
-      {
-        id: 35564,
-        name: 'Pet Projects',
-        cards: [
-          { id: 331, description: "build a chair" },
-          { id: 332, description: "skin a rabit" },
-          { id: 333, description: "paint a boat" },
-          { id: 334, description: "drill some holes" },
-          { id: 335, description: "hand some stuff" },
-        ]
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'empty board example',
-    background_color: '#9200bf',
-    lists: []
+const getInitialState = () => {
+  return {
+    records: {},
+    loading: false,
+    loadingFailed: undefined,
+    loadingError: undefined,
   }
-]
+}
 
-const boards = (state = {records:FakeBoards}, action) => {
-  return state
+// const addRecords = (recordsHash, recordsArray) => {
+//   return recordsArray.reduce((hash, record) => {
+//     hash[record.id] = record
+//     return hash
+//   }, Object.assign({},recordsHash))
+// }
+
+const extend = (state, updates) => Object.assign({}, state, updates)
+
+const boards = (state = getInitialState(), action) => {
+  switch (action.type) {
+    case 'LOADING_BOARDS':
+      return extend(state, {
+        loading: true,
+        loadingFailed: undefined,
+        loadingError: undefined,
+      })
+
+    case 'BOARDS_LOADED':
+      return extend(state, {
+        records: action.boards,
+        loading: false,
+      })
+
+    case 'BOARDS_LOAD_FAILED':
+      return extend(state, {
+        loading: false,
+        loadingFailed: true,
+        loadingError: action.error,
+      })
+
+    case 'CREATING_BOARD':
+      return state;
+
+    case 'BOARD_CREATED':
+      return state
+
+    case 'BOARD_CREATE_FAILED':
+      return state;
+
+    case 'LOADING_BOARD':
+      return extend(state, {
+        [action.boardId]: {loading: true}
+      })
+
+    case 'BOARD_LOADED':
+      return extend(state, {
+        [action.board.id]: action.board
+      })
+
+    case 'BOARD_LOAD_FAILED':
+      return extend(state, {
+        [action.boardId]: {error: action.error}
+      })
+
+    default:
+      return state
+  }
 }
 
 export default boards
+
+
+// dispatch({
+//   type: 'LOADING_BOARD',
+//   boardId: 12,
+// })

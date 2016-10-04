@@ -9,6 +9,7 @@ router.get( '/', ( request, response, next) => {
 } )
 
 router.post( '/', (request, response, next) => {
+  console.log('CREATE BOARD BODY???', request.body)
   commands.createBoard(request.session.userId, request.body).then( board => {
     response.json(board)
   }).catch(next)
@@ -17,6 +18,7 @@ router.post( '/', (request, response, next) => {
 router.get( '/:boardId', ( request, response, next ) => {
   queries.getBoardById(request.params.boardId).then( board => {
     if (board){
+      board.background_color = 'lightblue'
       response.json(board)
     }else{
       response.status(404).json(null)

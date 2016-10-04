@@ -12,9 +12,13 @@ import BoardShowPage from './components/BoardShowPage'
 
 const Main = PresentationalComponent((props) => {
   const { auth } = props.state
-  return  auth.isFetching ?
-    <div>Loading...</div> :
-    props.children
+  return (
+    auth.isFetching ?
+      <div>Loading...</div> :
+      auth.error ?
+        <div>Error: {auth.error}</div> :
+        props.children
+  )
 })
 
 export default {

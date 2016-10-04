@@ -3,30 +3,57 @@ import './BoardShowPage.sass'
 import Layout from './Layout'
 import Link from './Link'
 import PresentationalComponent from './PresentationalComponent'
+import actions from '../actions'
 
-const BoardShowPage = (props) => {
-  const { state } = props
-  const boardId = props.params.boardId
-  const board = state.boards.records
-    .find(record => record.id == boardId)
+class BoardShowPage extends Component {
 
-  if (!board) return <div>Board Not Found</div>
-
-  const lists = board.lists.map(list => {
-    return <List key={list.id} list={list} />
-  })
-
-  const style = {
-    backgroundColor: board.background_color
+  loadBoard(){
+    const boardId = this.props.params.boardId
+    actions.loadBoard(boardId)
   }
 
-  return <Layout className="BoardShowPage" style={style}>
-    <div className="BoardShowPage-Header">
-      <h1>{board.name}</h1>
-    </div>
+  componentWillMount(){
+    this.loadBoard()
+  }
 
-    <div className="BoardShowPage-lists">{lists}</div>
-  </Layout>
+  componentWillReceiveProps(nextProps){
+    if (this.props.params.boardId !== nextProps.params.boardId)
+      this.loadBoard()
+  }
+
+  render(){
+    const { state } = this.props
+    const boardId = this.props.params.boardId
+    const board = state.boards[boardId]
+
+    if (!board) return (
+      <Layout className="BoardShowPage">
+        <h1>Board Not Found</h1>
+      </Layout>
+    )
+
+    if (board.loading) return (
+      <Layout className="BoardShowPage">
+        <h1>Loading...</h1>
+      </Layout>
+    )
+
+    const lists = board.lists.map(list => {
+      return <List key={list.id} list={list} />
+    })
+
+    const style = {
+      backgroundColor: board.background_color
+    }
+
+    return <Layout className="BoardShowPage" style={style}>
+      <div className="BoardShowPage-Header">
+        <h1>{board.name}</h1>
+      </div>
+
+      <div className="BoardShowPage-lists">{lists}</div>
+    </Layout>
+  }
 }
 
 const List = (props) => {
