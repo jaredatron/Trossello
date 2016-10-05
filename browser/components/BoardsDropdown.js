@@ -47,7 +47,7 @@ const Dropdown = (props) => {
 }
 
 const Board = ({ board }) => {
-  return <Link to={`/boards/${board.id}`} className="">
+  return <Link to={`/boards/${board.id}`} className="BoardsDropdown-board">
     {board.name}
   </Link>
 }
