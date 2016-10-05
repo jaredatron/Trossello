@@ -7,7 +7,7 @@ class BoardsDropdown extends Component {
   constructor(props){
     super(props)
     this.state = {
-      open: true
+      open: false
     }
     this.toggle = this.toggle.bind(this)
   }
@@ -32,7 +32,7 @@ class BoardsDropdown extends Component {
 
 
 const Dropdown = (props) => {
-  const boards
+  let boards
   if (props.boards === null){
     boards = <div>Loading...</div>
   }else{

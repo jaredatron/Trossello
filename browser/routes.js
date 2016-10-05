@@ -13,7 +13,7 @@ import BoardShowPage from './components/BoardShowPage'
 const Main = PresentationalComponent((props) => {
   const { auth } = props.state
   return  auth.isFetching ?
-    <div>Loading...</div> :
+    <div></div> :
     props.children
 })
 
