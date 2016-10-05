@@ -1,6 +1,7 @@
 import $ from 'jquery'
 import './BoardsDropdown.sass'
 import React, { Component } from 'react'
+import Link from './Link'
 
 class BoardsDropdown extends Component {
 
@@ -36,13 +37,19 @@ const Dropdown = (props) => {
   if (props.boards === null){
     boards = <div>Loading...</div>
   }else{
-    boards = props.boards.map(board => {
-      return <div key={board.id}>{board.name}</div>
-    })
+    boards = props.boards.map(board =>
+      <Board key={board.id} board={board} />
+    )
   }
   return <div className="BoardsDropdown-dropdown">
     {boards}
   </div>
+}
+
+const Board = ({ board }) => {
+  return <Link to={`/boards/${board.id}`} className="">
+    {board.name}
+  </Link>
 }
 
 class BoardsProvider extends Component {
