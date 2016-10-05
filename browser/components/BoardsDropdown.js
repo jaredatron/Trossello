@@ -7,7 +7,7 @@ class BoardsDropdown extends Component {
   constructor(props){
     super(props)
     this.state = {
-      open: false
+      open: true
     }
     this.toggle = this.toggle.bind(this)
   }
@@ -32,9 +32,14 @@ class BoardsDropdown extends Component {
 
 
 const Dropdown = (props) => {
-  const boards = props.boards.map(board => {
-    return <div key={board.id}>{board.name}</div>
-  })
+  const boards
+  if (props.boards === null){
+    boards = <div>Loading...</div>
+  }else{
+    boards = props.boards.map(board => {
+      return <div key={board.id}>{board.name}</div>
+    })
+  }
   return <div className="BoardsDropdown-dropdown">
     {boards}
   </div>
@@ -45,11 +50,7 @@ class BoardsProvider extends Component {
   constructor(props){
     super(props)
     this.state = {
-      boards: [
-        {id: 1, name: 'foo'},
-        {id: 2, name: 'bar'},
-        {id: 3, name: 'baz'},
-      ]
+      boards: null,
     }
   }
 
