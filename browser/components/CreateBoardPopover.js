@@ -35,15 +35,15 @@ class CreateBoardPopover extends Component {
       data: JSON.stringify(board),
     }).then((board) => {
       boardsStore.reload()
-      this.context.redirectTo('/boards/'+board.id)
+      // this.context.redirectTo('/boards/'+board.id)
       this.reset()
       if (this.props.onClose) this.props.onClose()
     })
   }
 
   reset(){
-    this.refs.name.value = ''
-    this.refs.color.value = ''
+    if (this.refs.name) this.refs.name.value = ''
+    if (this.refs.color) this.refs.color.value = ''
   }
 
   render(props){
