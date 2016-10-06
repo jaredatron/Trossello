@@ -1,76 +1,8 @@
 const { expect, knex, queries, commands } = require('../../setup')
-
-
-
-const withTwoUsersInTheDatabase = (callback) => {
-  context('when there are users in the database', () => {
-    beforeEach( () => {
-      return Promise.all([
-        commands.createUser({
-          id: 1455,
-          github_id: 22312,
-          name: 'Mark Zuckerburg',
-          email: 'mark@zuckerburg.io',
-        }),
-        commands.createUser({
-          id: 6672,
-          github_id: 9775,
-          name: 'Larry Harvey',
-          email: 'larry@harvey.to',
-        })
-      ])
-    })
-    callback()
-  })
-}
-
-const withBoardsListsAndCardsInTheDatabase = (callback) => {
-  context('when there boards, list and cards in the database', () => {
-    beforeEach( () => {
-      return Promise.all([
-        commands.createBoard(1455, {
-          id: 1,
-          name: 'Board1'
-        }),
-        commands.createBoard(1455, {
-          id: 2,
-          name: 'Board2'
-        }),
-        commands.createList({
-          id: 40,
-          board_id: 1,
-          name: 'List1'
-        }),
-        commands.createList({
-          id: 41,
-          board_id: 1,
-          name: 'List2'
-        }),
-        commands.createCard({
-          id: 80,
-          list_id: 40,
-          content: 'card1'
-        }),
-        commands.createCard({
-          id: 81,
-          list_id: 40,
-          content: 'Card2'
-        }),
-        commands.createCard({
-          id: 82,
-          list_id: 41,
-          content: 'card3'
-        }),
-        commands.createCard({
-          id: 83,
-          list_id: 41,
-          content: 'Card4'
-        }),
-      ])
-    })
-    callback()
-  })
-}
+const {
+  withTwoUsersInTheDatabase,
+  withBoardsListsAndCardsInTheDatabase,
+} = require('../../fixtures')
 
 
 describe('database.commands', () => {
@@ -153,36 +85,37 @@ describe('database.commands', () => {
 
   describe('findOrCreateUserFromGithubProfile', () => {
     withTwoUsersInTheDatabase(() => {
-        context('when logging in as a new user', () => {
-          it('should create a new user record', () => {
-            const githubProfile = {
-              id: 445,
-              name: 'Page Hathaway',
-              email: 'page@hathaway.io',
-              avatar_url: 'http://page.com/hathaway.jpg',
-            }
-            return commands.findOrCreateUserFromGithubProfile(githubProfile).then(user => {
-              expect(user.id).to.be.a('number')
-              expect(user.id).to.not.eql(1455)
-              expect(user.id).to.not.eql(6672)
-            })
-          })
-        })
 
-        context('when logging in as an existing user', () => {
-          it('should find that user record by its github_id', () => {
-            const githubProfile = {
-              id: 22312,
-              name: 'Mark Elliot Zuckerburg',
-              email: 'mark@zuckerburg.io',
-              avatar_url: 'http://mark.com/zucker.jpg',
-            }
-            return commands.findOrCreateUserFromGithubProfile(githubProfile).then(user => {
-              expect(user.id).to.eql(1455)
-            })
+      context('when logging in as a new user', () => {
+        it('should create a new user record', () => {
+          const githubProfile = {
+            id: 445,
+            name: 'Page Hathaway',
+            email: 'page@hathaway.io',
+            avatar_url: 'http://page.com/hathaway.jpg',
+          }
+          return commands.findOrCreateUserFromGithubProfile(githubProfile).then(user => {
+            expect(user.id).to.be.a('number')
+            expect(user.id).to.not.eql(1455)
+            expect(user.id).to.not.eql(6672)
           })
         })
       })
+
+      context('when logging in as an existing user', () => {
+        it('should find that user record by its github_id', () => {
+          const githubProfile = {
+            id: 22312,
+            name: 'Mark Elliot Zuckerburg',
+            email: 'mark@zuckerburg.io',
+            avatar_url: 'http://mark.com/zucker.jpg',
+          }
+          return commands.findOrCreateUserFromGithubProfile(githubProfile).then(user => {
+            expect(user.id).to.eql(1455)
+          })
+        })
+      })
+
     })
   })
 
@@ -218,39 +151,37 @@ describe('database.commands', () => {
         const cardAttributes = {
           content: 'This content has been updated',
         }
-        return commands.updateCard(11, cardAttributes).then( card => {
+        return commands.updateCard(80, cardAttributes).then( card => {
           expect(card).to.be.a('object')
-          expect(card.id).to.eql(11)
+          expect(card.id).to.eql(80)
           expect(card.content).to.eql('This content has been updated')
           return knex.table('cards').then( cards => {
-            expect(cards.length).to.eql(2)
+            expect(cards.length).to.eql(4)
             cards.forEach(card => {
-              if (card.id === 11){
+              if (card.id === 80){
                 expect(card).to.be.a('object')
-                expect(card.list_id).to.eql(33)
+                expect(card.list_id).to.eql(40)
                 expect(card.content).to.eql('This content has been updated')
-              }else if (card.id === 10){
+              }else if (card.id === 81){
                 expect(card).to.be.a('object')
-                expect(card.list_id).to.eql(30)
-                expect(card.content).to.eql('Having fun in this evening')
-              }else{
-                throw new Error('unexpected card record')
+                expect(card.list_id).to.eql(40)
+                expect(card.content).to.eql('Card2')
               }
             })
           })
-
+        })
       })
     })
   })
 
   describe('deleteCard', () => {
-    withTwoUsersInTheDatabase(() => {
+    withBoardsListsAndCardsInTheDatabase(() => {
       it('should delete a card by card id', () => {
-        return queries.getCardById(11).then( card => {
+        return queries.getCardById(83).then( card => {
           expect(card).to.be.a('object')
-          expect(card.id).to.eql(11)
-          return commands.deleteCard(11).then( () => {
-            return queries.getCardById(11).then( card => {
+          expect(card.id).to.eql(83)
+          return commands.deleteCard(83).then( () => {
+            return queries.getCardById(83).then( card => {
               expect(card).to.be.undefined
             })
           })
@@ -260,16 +191,50 @@ describe('database.commands', () => {
   })
 
   describe('createBoard', () => {
-
+    it('should create a new board entry in db, and associate it with a user', () => {
+      return commands.createBoard(15, {name: "My Board"})
+        .then(board => {
+          expect(board.name).to.eql("My Board")
+          expect(board.background_color).to.eql("#0079bf")
+          return queries.getBoardsByUserId(15)
+          .then(boards => {
+            expect(boards.length).to.eql(1)
+            expect(boards[0].id).to.eql(board.id)
+            expect(boards[0].name).to.eql("My Board")
+            expect(boards[0].background_color).to.eql("#0079bf")
+          })
+        })
+    })
   })
 
   describe('updateBoard', () => {
-
+    withBoardsListsAndCardsInTheDatabase(() => {
+      it('should update a board with given attributes',() => {
+        const newAttributes = {
+          name: "NewBoardName"
+        }
+        return commands.updateBoard(1, newAttributes)
+          .then( board => {
+            expect(board.id).to.eql(1)
+            expect(board.name).to.eql('NewBoardName')
+          })
+      })
+    })
   })
 
   describe('deleteBoard', () => {
-
+    withBoardsListsAndCardsInTheDatabase(() => {
+      it('should delete a board by board id', () => {
+        return commands.deleteBoard(1)
+        .then( () => {
+          return queries.getBoardById(1).then( board => {
+            expect(board).to.be.undefined
+          })
+        })
+      })
+    })
   })
 
-
 })
+
+
