@@ -2,23 +2,23 @@ const { expect, knex, queries, commands } = require('./setup')
 
 describe('database', () => {
 
-  describe('createUser', () => {
-    it('should insert a record into the users table', () => {
-      const userAttributes = {
-        name: 'Weird Al',
-        email: 'weird@al.sexy',
-      }
-      return commands.createUser(userAttributes).then(user => {
-        expect(user).to.be.a('object')
-        expect(user.id).to.be.a('number')
+  // describe('createUser', () => {
+  //   it('should insert a record into the users table', () => {
+  //     const userAttributes = {
+  //       name: 'Weird Al',
+  //       email: 'weird@al.sexy',
+  //     }
+  //     return commands.createUser(userAttributes).then(user => {
+  //       expect(user).to.be.a('object')
+  //       expect(user.id).to.be.a('number')
 
-        return queries.getUsers().then( users => {
-          expect(users).to.be.a('array')
-          expect(users.length).to.eql(1)
-        })
-      })
-    })
-  })
+  //       return queries.getUsers().then( users => {
+  //         expect(users).to.be.a('array')
+  //         expect(users.length).to.eql(1)
+  //       })
+  //     })
+  //   })
+  // })
 
   context('when there are users in the database', () => {
     beforeEach( () => {
@@ -88,73 +88,73 @@ describe('database', () => {
       })
     })
 
-    describe('updateUser', () => {
+    // describe('updateUser', () => {
 
-      it('should update a user with given attributes', () => {
-        const userAttributes = {
-          name: 'Majid Rahimi',
-          email: 'majid@gmail.com',
-        }
-        return commands.updateUser(1455, userAttributes).then( user => {
-          expect(user).to.be.a('object')
-          expect(user.id).to.eql(1455)
-          expect(user.name).to.eql('Majid Rahimi')
-          expect(user.email).to.eql('majid@gmail.com')
+    //   it('should update a user with given attributes', () => {
+    //     const userAttributes = {
+    //       name: 'Majid Rahimi',
+    //       email: 'majid@gmail.com',
+    //     }
+    //     return commands.updateUser(1455, userAttributes).then( user => {
+    //       expect(user).to.be.a('object')
+    //       expect(user.id).to.eql(1455)
+    //       expect(user.name).to.eql('Majid Rahimi')
+    //       expect(user.email).to.eql('majid@gmail.com')
 
-          return queries.getUsers().then( users => {
-            expect(users.length).to.eql(2)
-            users.forEach(user => {
-              if (user.id === 1455){
-                expect(user).to.be.a('object')
-                expect(user.id).to.eql(1455)
-                expect(user.name).to.eql('Majid Rahimi')
-                expect(user.email).to.eql('majid@gmail.com')
-              }else if (user.id === 6672){
-                expect(user).to.be.a('object')
-                expect(user.id).to.eql(6672)
-                expect(user.name).to.eql('Larry Harvey')
-                expect(user.email).to.eql('larry@harvey.to')
-              }else{
-                throw new Error('unexpected user record')
-              }
-            })
-          })
-        })
-      })
+    //       return queries.getUsers().then( users => {
+    //         expect(users.length).to.eql(2)
+    //         users.forEach(user => {
+    //           if (user.id === 1455){
+    //             expect(user).to.be.a('object')
+    //             expect(user.id).to.eql(1455)
+    //             expect(user.name).to.eql('Majid Rahimi')
+    //             expect(user.email).to.eql('majid@gmail.com')
+    //           }else if (user.id === 6672){
+    //             expect(user).to.be.a('object')
+    //             expect(user.id).to.eql(6672)
+    //             expect(user.name).to.eql('Larry Harvey')
+    //             expect(user.email).to.eql('larry@harvey.to')
+    //           }else{
+    //             throw new Error('unexpected user record')
+    //           }
+    //         })
+    //       })
+    //     })
+    //   })
 
-    })
+    // })
 
-    describe('findOrCreateUserFromGithubProfile', () => {
-      context('when logging in as a new user', () => {
-        it('should create a new user record', () => {
-          const githubProfile = {
-            id: 445,
-            name: 'Page Hathaway',
-            email: 'page@hathaway.io',
-            avatar_url: 'http://page.com/hathaway.jpg',
-          }
-          return commands.findOrCreateUserFromGithubProfile(githubProfile).then(user => {
-            expect(user.id).to.be.a('number')
-            expect(user.id).to.not.eql(1455)
-            expect(user.id).to.not.eql(6672)
-          })
-        })
-      })
+    // describe('findOrCreateUserFromGithubProfile', () => {
+    //   context('when logging in as a new user', () => {
+    //     it('should create a new user record', () => {
+    //       const githubProfile = {
+    //         id: 445,
+    //         name: 'Page Hathaway',
+    //         email: 'page@hathaway.io',
+    //         avatar_url: 'http://page.com/hathaway.jpg',
+    //       }
+    //       return commands.findOrCreateUserFromGithubProfile(githubProfile).then(user => {
+    //         expect(user.id).to.be.a('number')
+    //         expect(user.id).to.not.eql(1455)
+    //         expect(user.id).to.not.eql(6672)
+    //       })
+    //     })
+    //   })
 
-      context('when logging in as an existing user', () => {
-        it('should find that user record by its github_id', () => {
-          const githubProfile = {
-            id: 22312,
-            name: 'Mark Elliot Zuckerburg',
-            email: 'mark@zuckerburg.io',
-            avatar_url: 'http://mark.com/zucker.jpg',
-          }
-          return commands.findOrCreateUserFromGithubProfile(githubProfile).then(user => {
-            expect(user.id).to.eql(1455)
-          })
-        })
-      })
-    })
+    //   context('when logging in as an existing user', () => {
+    //     it('should find that user record by its github_id', () => {
+    //       const githubProfile = {
+    //         id: 22312,
+    //         name: 'Mark Elliot Zuckerburg',
+    //         email: 'mark@zuckerburg.io',
+    //         avatar_url: 'http://mark.com/zucker.jpg',
+    //       }
+    //       return commands.findOrCreateUserFromGithubProfile(githubProfile).then(user => {
+    //         expect(user.id).to.eql(1455)
+    //       })
+    //     })
+    //   })
+    // })
   })
 
   context('when there are cards in the database', () => {
@@ -186,47 +186,12 @@ describe('database', () => {
     })
 
     describe('deleteCard', () => {
-      it('should delete a card by card id', () => {
-        return queries.getCardById(11).then( card => {
-          expect(card).to.be.a('object')
-          expect(card.id).to.eql(11)
-          return commands.deleteCard(11).then( () => {
-            return queries.getCardById(11).then( card => {
-              expect(card).to.be.undefined
-            })
-          })
-        })
-      })
+
+
     })
 
     describe('updateCard', () => {
 
-      it('should update a card with given attributes', () => {
-        const cardAttributes = {
-          content: 'This content has been updated',
-        }
-        return commands.updateCard(11, cardAttributes).then( card => {
-          expect(card).to.be.a('object')
-          expect(card.id).to.eql(11)
-          expect(card.content).to.eql('This content has been updated')
-          return knex.table('cards').then( cards => {
-            expect(cards.length).to.eql(2)
-            cards.forEach(card => {
-              if (card.id === 11){
-                expect(card).to.be.a('object')
-                expect(card.list_id).to.eql(33)
-                expect(card.content).to.eql('This content has been updated')
-              }else if (card.id === 10){
-                expect(card).to.be.a('object')
-                expect(card.list_id).to.eql(30)
-                expect(card.content).to.eql('Having fun in this evening')
-              }else{
-                throw new Error('unexpected card record')
-              }
-            })
-          })
-        })
-      })
 
     })
 
