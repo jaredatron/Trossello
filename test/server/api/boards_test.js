@@ -5,7 +5,7 @@ const{
   loginAs,
 } = require('../../helpers')
 
-describe.only('/api/boards', () => {
+describe('/api/boards', () => {
 
   withTwoUsersInTheDatabase(() => {
     withBoardsListsAndCardsInTheDatabase(() => {
