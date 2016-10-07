@@ -1,6 +1,6 @@
-const { knex, queries, commands } = require('./setup')
+const { knex, request, queries, commands } = require('./setup')
 
-export const withTwoUsersInTheDatabase = (callback) => {
+const withTwoUsersInTheDatabase = (callback) => {
   context('when there are users in the database', () => {
     beforeEach( () => {
       return Promise.all([
@@ -22,7 +22,7 @@ export const withTwoUsersInTheDatabase = (callback) => {
   })
 }
 
-export const withBoardsListsAndCardsInTheDatabase = (callback) => {
+const withBoardsListsAndCardsInTheDatabase = (callback) => {
   context('when there boards, list and cards in the database', () => {
     beforeEach( () => {
       return Promise.all([
@@ -70,4 +70,14 @@ export const withBoardsListsAndCardsInTheDatabase = (callback) => {
     })
     callback()
   })
+}
+
+const loginAs = (userId) => {
+  return request('get', `/__login/${userId}`) // back door hack
+}
+
+module.exports = {
+  withTwoUsersInTheDatabase,
+  withBoardsListsAndCardsInTheDatabase,
+  loginAs,
 }

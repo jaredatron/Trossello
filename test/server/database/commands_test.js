@@ -2,7 +2,7 @@ const { expect, knex, queries, commands } = require('../../setup')
 const {
   withTwoUsersInTheDatabase,
   withBoardsListsAndCardsInTheDatabase,
-} = require('../../fixtures')
+} = require('../../helpers')
 
 
 describe('database.commands', () => {
