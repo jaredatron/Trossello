@@ -39,6 +39,9 @@ export default (knex) => {
       })
   }
 
+  const getListById = (id) =>
+    getRecordById('lists', id)
+
   const getCardById = (id) =>
     getRecordById('cards', id)
 
@@ -48,6 +51,7 @@ export default (knex) => {
     getCardById,
     getBoardsByUserId,
     getBoardById,
+    getListById,
   }
 
 }

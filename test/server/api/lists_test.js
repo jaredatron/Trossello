@@ -5,15 +5,15 @@ const{
   loginAs,
 } = require('../../helpers')
 
-describe('/api/cards', () => {
+describe('/api/lists', () => {
   withTwoUsersInTheDatabase(() => {
     withBoardsListsAndCardsInTheDatabase(() => {
 
       context('when not logged in', () => {
         // UPDATE
-        describe('POST /api/cards/:cardId', () => {
+        describe('POST /api/lists/:listId', () => {
           it('should render 400 Not Authorized', () => {
-            return request('post', '/api/cards/12')
+            return request('post', '/api/lists/12')
               .then(response => {
                 expect(response).to.have.status(400)
               })
@@ -21,16 +21,15 @@ describe('/api/cards', () => {
         })
 
         // DELETE
-        describe('POST /api/cards/:cardId/delete', () => {
+        describe('POST /api/lists/:listId/delete', () => {
           it('should render 400 Not Authorized', () => {
-            return request('post', '/api/cards/12/delete')
+            return request('post', '/api/lists/12/delete')
               .then(response => {
                 expect(response).to.have.status(400)
               })
           })
         })
       })
-
 
       context('when logged in', () => {
         beforeEach(() => {
@@ -38,28 +37,28 @@ describe('/api/cards', () => {
         })
 
         // UPDATE
-        describe('POST /api/cards/:cardId', () => {
-          it('should update the card and render it as json', () => {
-            const cardAttributes = {
-              content: 'Eat some shoe laces'
+        describe('POST /api/lists/:listId', () => {
+          it('should update the list and render it as JSON', () => {
+            const listAttributes = {
+              name: 'Shopping List'
             }
-            return request('post', '/api/cards/83', cardAttributes)
+            return request('post', '/api/lists/41', listAttributes)
               .then(response => {
                 expect(response).to.have.status(200)
-                expect(response.body.id).to.eql(83)
-                expect(response.body.list_id).to.eql(41)
-                expect(response.body.content).to.eql('Eat some shoe laces')
+                expect(response.body.id).to.eql(41)
+                expect(response.body.board_id).to.eql(1)
+                expect(response.body.name).to.eql('Shopping List')
               })
           })
         })
 
         // DELETE
-        describe('POST /api/cards/:cardId/delete', () => {
-          it('should render 400 Not Authorized', () => {
-            return request('post', '/api/cards/83/delete')
+        describe('POST /api/lists/:listId/delete', () => {
+          it('should delete the list and render null', () => {
+            return request('post', '/api/lists/41/delete')
               .then(response => {
                 expect(response).to.have.status(200)
-                return queries.getCardById(83).then(list => {
+                return queries.getListById(41).then(list => {
                   expect(list).to.be.undefined
                 })
               })
@@ -67,6 +66,7 @@ describe('/api/cards', () => {
         })
 
       })
+
     })
   })
 })
